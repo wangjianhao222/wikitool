@@ -1,106 +1,165 @@
-# wikitool
-Imported Libraries The script starts by importing the necessary libraries:  tkinter as tk: This is Python's standard GUI (Graphical User Interface) toolkit. It's used to create the windows, buttons, text fields, and other visual elements of the application.  requests: This library is used for making HTTP requests to external web services, 
-search_wikipedia() Function
-This is the core logic of the application. It's called when the "Search" button is clicked.
+# WikiTool - 维基百科搜索引擎 增强版 v2.0
 
-Getting Input:
+一个功能丰富的桌面维基百科搜索应用程序，支持多语言搜索、搜索历史、随机文章发现等高级功能。
 
-query = entry.get(): Retrieves the text entered by the user into the search input field.
+## 🌟 主要特性
 
-selected_language = language_var.get(): Gets the language selected by the user from the dropdown menu (e.g., "en", "zh", "fr").
+### 核心功能
+- **🔍 多语言搜索**: 支持12种语言的维基百科搜索
+- **💡 智能建议**: 搜索时提供多个匹配结果供选择
+- **🎲 随机发现**: 一键获取随机维基百科文章
+- **🕒 搜索历史**: 自动保存最近20次搜索记录
 
-Constructing the API URL:
+### 高级功能
+- **📝 页内搜索**: 在当前文章中查找并高亮显示文本
+- **💾 导出功能**: 将搜索结果保存为文本文件
+- **📊 文章统计**: 显示文章字数、阅读时间等信息
+- **🌙 主题切换**: 深色/浅色主题一键切换
 
-url = f"https://{selected_language}.wikipedia.org/w/api.php": Dynamically creates the Wikipedia API endpoint URL based on the chosen language. For example, if "en" is selected, the URL will be https://en.wikipedia.org/w/api.php.
+### 用户体验
+- **⌨️ 键盘快捷键**: 丰富的快捷键支持提高操作效率
+- **🎨 现代界面**: 彩色按钮、图标和直观的布局设计
+- **📋 菜单栏**: 完整的文件、工具和帮助菜单
+- **📍 状态栏**: 实时显示应用程序状态信息
 
-Setting API Parameters:
+## 🚀 快速开始
 
-params = {...}: Defines a dictionary of parameters for the Wikipedia API request. These parameters tell the API what kind of data to return:
+### 环境要求
+- Python 3.6+
+- tkinter (通常随Python一起安装)
+- requests库
 
-"action": "query": Specifies that the request is for querying information.
+### 安装依赖
+```bash
+pip install requests
+```
 
-"format": "json": Requests the response in JSON format.
+### 运行程序
+```bash
+python3 wikitool.py
+```
 
-"prop": "extracts": Asks for the extracted plain text of the page.
+## 📖 使用指南
 
-"exintro": "": Limits the extract to the introductory section of the page.
+### 基本搜索
+1. 在搜索框中输入关键词
+2. 选择目标语言 (支持: en, zh, fr, de, es, ja, ru, it, pt, ar, ko, hi)
+3. 点击"🔍 搜索"按钮或按Enter键
 
-"explaintext": "": Returns the extract as plain text, stripping out Wiki markup.
+### 搜索建议
+- 点击"💡 建议"按钮查看多个搜索结果
+- 在建议窗口中双击或选择后按Enter确认
 
-"redirects": 1: Resolves redirects (e.g., if you search for "NYC", it will redirect to "New York City").
+### 搜索历史
+- 左侧面板显示最近的搜索历史
+- 点击历史记录快速重新搜索
+- 使用"清除"按钮清空历史记录
 
-"titles": query: The search term provided by the user.
+### 随机文章
+- 点击"🎲 随机"按钮发现有趣的随机文章
+- 或使用快捷键 Ctrl+R
 
-Making the API Request:
+### 页内搜索
+1. 在"📝 页内搜索"框中输入要查找的文本
+2. 点击"🔍 查找"或按Enter键
+3. 匹配的文本将以黄色高亮显示
+4. 状态显示匹配项数量
 
-try...except requests.RequestException as e:: This block handles potential errors during the web request, such as network issues or invalid URLs.
+### 导出功能
+- 点击"💾 导出"按钮将当前文章保存为文本文件
+- 导出文件包含搜索元数据和完整内容
 
-response = requests.get(url, params=params): Sends an HTTP GET request to the Wikipedia API with the defined URL and parameters.
+### 主题切换
+- 点击"🌙 主题"按钮在深色和浅色主题间切换
+- 或使用快捷键 Ctrl+T
 
-response.raise_for_status(): Checks if the request was successful (status code 200). If not, it raises an HTTPError.
+## ⌨️ 键盘快捷键
 
-data = response.json(): Parses the JSON response from the API into a Python dictionary.
+| 快捷键 | 功能 |
+|--------|------|
+| `Enter` | 搜索 / 页内搜索 |
+| `Ctrl+R` | 获取随机文章 |
+| `Ctrl+E` | 导出当前结果 |
+| `Ctrl+F` | 焦点移到页内搜索框 |
+| `Ctrl+T` | 切换深色/浅色主题 |
+| `Ctrl+H` | 清除搜索历史 |
+| `F1` | 显示帮助信息 |
 
-Processing the Response:
+## 🔧 技术细节
 
-pages = data["query"]["pages"]: Navigates through the JSON structure to get the "pages" object, which contains the search results.
+### 架构设计
+- **模块化代码结构**: 功能分离，易于维护
+- **事件驱动界面**: 响应用户交互和键盘事件
+- **状态管理**: 全局变量管理应用状态
+- **异常处理**: 完善的错误处理和用户反馈
 
-for page_id, page in pages.items():: Iterates through the pages returned by the API (usually just one relevant page for a direct search).
+### API集成
+- **Wikipedia API**: 使用官方API获取文章内容
+- **OpenSearch API**: 获取搜索建议
+- **Random API**: 获取随机文章
 
-if "extract" in page:: Checks if an "extract" (the article content) is present for the page.
+### 数据处理
+- **UTF-8编码**: 支持多语言字符
+- **文本解析**: 提取纯文本内容
+- **搜索高亮**: 实时文本匹配和高亮
 
-result_text.delete(1.0, tk.END): Clears any previous text in the result_text display area.
+## 📱 界面预览
 
-result_text.insert(tk.END, page["extract"]): Inserts the retrieved Wikipedia article extract into the display area.
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 文件(F)  工具(T)  帮助(H)                               ×   │
+├─────────────────────────────────────────────────────────────┤
+│ ┌─搜索历史────┐ ┌─主要内容区域─────────────────────────┐   │
+│ │ 🕒 搜索历史  │ │ 语言: [en] 搜索: [____] 🔍🎲💾📊🌙 │   │
+│ │ ┌─────────┐ │ │ ┌─页内搜索─────────────────────────┐ │   │
+│ │ │ Python  │ │ │ │ 📝 [____] 🔍🧹 找到3个匹配项    │ │   │
+│ │ │ AI      │ │ │ └─────────────────────────────────┘ │   │
+│ │ │ 机器学习  │ │ │ ┌─搜索结果─────────────────────────┐ │   │
+│ │ │ ...     │ │ │ │ Wikipedia article content...    │ │   │
+│ │ └─────────┘ │ │ │ highlighted text appears here   │ │   │
+│ │ [清除]      │ │ │ with yellow background...       │ │   │
+│ └───────────┘ │ │ └─────────────────────────────────┘ │   │
+│                 └─────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────┤
+│ 就绪 - 使用F1查看帮助                                v2.0 │
+└─────────────────────────────────────────────────────────────┘
+```
 
-else:: If no extract is found for the page.
+## 📈 版本历史
 
-result_text.delete(1.0, tk.END): Clears the display.
+### v2.0 (当前版本)
+- ✅ 添加搜索历史功能
+- ✅ 添加随机文章发现
+- ✅ 添加搜索建议功能  
+- ✅ 添加页内搜索和高亮
+- ✅ 添加导出功能
+- ✅ 添加主题切换
+- ✅ 添加文章统计信息
+- ✅ 添加键盘快捷键
+- ✅ 添加菜单栏和状态栏
+- ✅ 增强用户界面设计
+- ✅ 扩展语言支持(12种)
+- ✅ 改进错误处理
 
-result_text.insert(tk.END, "未找到相关内容。"): Displays a message indicating that no content was found (this message is in Chinese).
+### v1.0 (原始版本)
+- ✅ 基本搜索功能
+- ✅ 语言选择(5种)
+- ✅ 简单界面
 
-Error Handling:
+## 🤝 贡献
 
-except requests.RequestException as e:: If an error occurs during the API request (e.g., no internet connection), it catches the exception.
+欢迎提交Issue和Pull Request来改进这个项目！
 
-result_text.delete(1.0, tk.END): Clears the display.
+## 📄 许可证
 
-result_text.insert(tk.END, f"请求出错: {e}"): Displays an error message to the user (in Chinese, showing the specific error).
+MIT License
 
-GUI Setup (Main Window)
-This section sets up the main window and its widgets.
+## 🙏 致谢
 
-root = tk.Tk(): Creates the main window of the application.
+- Wikipedia API 提供数据支持
+- Python tkinter 提供GUI框架
+- 所有贡献者和用户的反馈
 
-root.title("维基百科搜索引擎"): Sets the title of the window to "Wikipedia Search Engine" (in Chinese).
+---
 
-Language Selection Dropdown
-languages = ["en", "zh", "fr", "de", "es"]: Defines a list of supported language codes.
-
-language_var = tk.StringVar(root): Creates a Tkinter variable to hold the currently selected language.
-
-language_var.set("en"): Sets the default selected language to English.
-
-language_menu = ttk.Combobox(root, textvariable=language_var, values=languages): Creates a dropdown (combobox) widget linked to language_var and populated with the languages list.
-
-language_menu.pack(pady=5): Places the dropdown widget in the window, with some vertical padding.
-
-Input Field
-entry = tk.Entry(root, width=50): Creates a single-line text input field where the user types their search query.
-
-entry.pack(pady=10): Places the input field, with vertical padding.
-
-Search Button
-search_button = tk.Button(root, text="搜索", command=search_wikipedia): Creates a button with the text "Search" (in Chinese). When this button is clicked, it executes the search_wikipedia function.
-
-search_button.pack(pady=5): Places the button, with vertical padding.
-
-Result Display Area
-result_text = scrolledtext.ScrolledText(root, width=80, height=20): Creates a multi-line text area with a scrollbar to display the Wikipedia search results. It's set to a width of 80 characters and a height of 20 lines.
-
-result_text.pack(pady=10): Places the text area, with vertical padding.
-
-Running the Application
-root.mainloop(): Starts the Tkinter event loop. This line keeps the application window open and responsive to user interactions (like button clicks and typing) until the window is closed.
-
-In summary, wikitool.py is a user-friendly, self-contained desktop application that allows users to search Wikipedia articles in multiple languages directly from their computer, providing a simple interface for quick information retrieval.
+**享受探索维基百科的乐趣！🎉**
